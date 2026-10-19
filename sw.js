@@ -1,4 +1,4 @@
-const VERSION = "rocky-studio-v1";
+const VERSION = "rocky-studio-v2";
 const CORE = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./maskable-512.png", "./favicon-64.png"];
 const RUNTIME_HOSTS = ["fonts.googleapis.com", "fonts.gstatic.com", "cdn.jsdelivr.net"];
 
@@ -14,7 +14,7 @@ self.addEventListener("fetch", e => {
   const url = new URL(req.url);
   if (url.origin === location.origin) {
     // App files: try the network first so updates arrive, fall back to the saved copy when offline
-    e.respondWith(fetch(req).then(res => {
+    e.respondWith(fetch(req, { cache: "no-cache" }).then(res => {
       const copy = res.clone(); caches.open(VERSION).then(c => c.put(req, copy)); return res;
     }).catch(() => caches.match(req).then(r => r || caches.match("./index.html"))));
     return;
